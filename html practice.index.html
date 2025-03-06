@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>モンストSS倍率計算</title>
+</head>
+<body>
+    <h1>モンストのSS倍率を計算できたりするサイトです</h1>
+
+    <label for="stage">ステージを選択してください：</label>
+    <select id="stage">
+        <option value="" disabled selected>選択してください</option>
+        <optgroup label="轟絶">
+            <option value="轟絶1">轟絶1</option>
+            <option value="轟絶2">轟絶2</option>
+            <option value="轟絶3">轟絶3</option>
+        </optgroup>
+        <optgroup label="天魔">
+            <option value="試練1">試練1</option>
+            <option value="試練2">試練2</option>
+            <option value="試練3">試練3</option>
+            <option value="試練4">試練4</option>
+            <option value="試練5">試練5</option>
+            <option value="試練6">試練6</option>
+            <option value="試練7">試練7</option>
+            <option value="試練8">試練8</option>
+            <option value="試練9">試練9</option>
+            <option value="試練10">試練10</option>
+            <option value="庭園1">庭園1</option>
+            <option value="庭園2">庭園2</option>
+            <option value="庭園3">庭園3</option>
+            <option value="庭園4">庭園4</option>
+            <option value="庭園5">庭園5</option>
+            <option value="庭園6">庭園6</option>
+            <option value="庭園7">庭園7</option>
+            <option value="庭園8">庭園8</option>
+            <option value="庭園9">庭園9</option>
+            <option value="庭園10">庭園10</option>
+        </optgroup>
+    </select>
+
+    <script>
+        const stageMultipliers = {
+            "轟絶1": { punchMultiplier: 2.1, WeakPointsMultiplier: 2.6, BodyPointsMultiplier: 1.5, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "轟絶2": { punchMultiplier: 2.2, WeakPointsMultiplier: 2.8, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "轟絶3": { punchMultiplier: 2.5, WeakPointsMultiplier: 3.0, BodyPointsMultiplier: 1.7, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "試練1": { punchMultiplier: 1.9, WeakPointsMultiplier: 2.4, BodyPointsMultiplier: 1.4, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "試練2": { punchMultiplier: 2.0, WeakPointsMultiplier: 2.5, BodyPointsMultiplier: 1.5, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "試練3": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "試練4": { punchMultiplier: 1.9, WeakPointsMultiplier: 2.4, BodyPointsMultiplier: 1.4, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "試練5": { punchMultiplier: 2.0, WeakPointsMultiplier: 2.5, BodyPointsMultiplier: 1.5, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "試練6": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "試練7": { punchMultiplier: 1.9, WeakPointsMultiplier: 2.4, BodyPointsMultiplier: 1.4, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "試練8": { punchMultiplier: 2.0, WeakPointsMultiplier: 2.5, BodyPointsMultiplier: 1.5, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "試練9": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "試練10": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "庭園1": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "庭園2": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "庭園3": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "庭園4": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "庭園5": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "庭園6": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "庭園7": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "庭園8": { punchMultiplier: 33.4, WeakPointsMultiplier: 8, BodyPointsMultiplier: 1, Defensivestrength: 6, MukiMukibuf: 1.0, QuestMultiplier: 1.0, UpedWeakPointMultiplier: 1.0 },
+            "庭園9": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+            "庭園10": { punchMultiplier: 2.3, WeakPointsMultiplier: 2.7, BodyPointsMultiplier: 1.6, Defensivestrength: 1.0, MukiMukibuf: 1.0, QuestMultiplier: 1.0 },
+        };
+
+        document.getElementById("stage").addEventListener("change", function() {
+            let selectedStage = this.value;
+            let multipliers = stageMultipliers[selectedStage];
+
+            if (multipliers) {
+                document.getElementById("punchMultiplier").value = multipliers.punchMultiplier.toFixed(2);
+                document.getElementById("WeakPointsMultiplier").value = multipliers.WeakPointsMultiplier.toFixed(2);
+                document.getElementById("BodyPointsMultiplier").value = multipliers.BodyPointsMultiplier.toFixed(2);
+                document.getElementById("Defensivestrength").value = (multipliers.Defensivestrength || 1.0).toFixed(2);
+                document.getElementById("MukiMukibuf").value = (multipliers.MukiMukibuf || 1.0).toFixed(2);
+                document.getElementById("QuestMultiplier").value = (multipliers.QuestMultiplier || 1.0).toFixed(2);
+                document.getElementById("UpedWeakPointMultiplier").value = multipliers.UpedWeakPointMultiplier.toFixed(2);
+                document.getElementById("PlayerUpedWeakPointMultiplier").value = multipliers.PlayerUpedWeakPointMultiplier.toFixed(2);
+            }
+        });
+    </script>
+    <br>
+    <h1>クエスト側の倍率</h1>
+    <label>本体倍率: <input id="BodyPointsMultiplier" type="text" readonly></label>
+    <label>直殴り倍率: <input id="punchMultiplier" type="text" readonly></label>
+    <label>弱点倍率: <input id="WeakPointsMultiplier" type="text" readonly></label>
+    <label>防御ダウン: <input id="Defensivestrength" type="text" readonly></label><br>
+    <label>弱点倍率up: <input id="UpedWeakPointMultiplier" type = "text" readonly></label><br>
+    <label>バフ(キャラの右下にムキムキマークが出る物): <input id="MukiMukibuf" type="number" value="1.0" readonly></label><br>
+    <label>特殊倍率(キャラの右下にムキムキマークが出ないもの): <input id="QuestMultiplier" type="text" readonly></label><br>
+    <h1>プレイヤー側の接待</h1>
+    <label>弱点倍率up: <input id="playerUpedWeakPointMultiplier" type="number" value="1.0" oninput="calculateTotal()"></label>
+    <label>防御ダウン: <input id="playerDefenseDownMultiplier" type="number" value="1.0" oninput="calculateTotal()"></label>
+    <label>バフ（キャラの右下にムキムキマークが出る物）: <input id="playerBuffMultiplier" type="number" value="1.0" oninput="calculateTotal()"></label><br>
+    <br>
+    <label>拾った弱点の数:</label><input type="number" id="WeakPoints" value="1.0" oninput="calculateTotal()"> <br>
+    <label>拾った本体の数:</label>
+    <input type="number" id="BodyPoints" value="1.0" oninput="calculateTotal()"> <br>
+    <label>ゲージ前攻撃力:</label>
+    <input type="number" id="attackPower" value="0" oninput="calculateTotal()"> <br>
+    <label>加撃量:</label>
+    <input type="number" id="extraPower" value="0" oninput="calculateTotal()"> <br>
+    <p>ゲージ:</p>
+    <input type="radio" name="gauge" value="1.2" onclick="updateValue('gaugeMultiplier', 1.2)"> あり <br>
+    <input type="radio" name="gauge" value="1.0" onclick="updateValue('gaugeMultiplier', 1.0)"> なし <br>
+    <label>アビリティ:</label>
+    <input type="number" id="abilityMultiplier" value="1.0" oninput="calculateTotal()"> <br>
+    <label>キラー:</label>
+    <input type="number" id="killerMultiplier" value="1.0" oninput="calculateTotal()"> <br>
+    <label>紋章:</label>
+    <input type="number" id="emblemMultiplier" value="0" oninput="calculateTotal()"> <br>
+    <label>直殴り部分のダメージ:</label>
+    <input type="number" id="PunchDamage" value="1.0" oninput="calculateTotal()"> <br>
+    <p>属性倍率を選んでください:</p>
+    <input type="radio" name="attribute" value="1.3" onclick="updateValue('attributeMultiplier', 1.3)"> 通常/非超バラ <br>
+    <input type="radio" name="attribute" value="1.596" onclick="updateValue('attributeMultiplier', 1.596)"> 通常/超バラ <br>
+    <input type="radio" name="attribute" value="1.5016" onclick="updateValue('attributeMultiplier', 1.5016)"> up/非超バラ <br>
+    <input type="radio" name="attribute" value="1.90592" onclick="updateValue('attributeMultiplier', 1.90592)"> up/超バラ <br>
+    <input type="radio" name="attribute" value="1.99" onclick="updateValue('attributeMultiplier', 1.99)"> 超up/非超バラ <br>
+    <input type="radio" name="attribute" value="2.80588" onclick="updateValue('attributeMultiplier', 2.80588)"> 超up/超バラ <br>
+    <input type="radio" name="attribute" value="2.9998" onclick="updateValue('attributeMultiplier', 2.9998)"> 超絶up/非超バラ <br>
+    <input type="radio" name="attribute" value="4.61176" onclick="updateValue('attributeMultiplier', 4.61176)"> 超絶up/超バラ <br>
+    <p>怒り倍率を選んでください:</p>
+    <input type="radio" name="rage" value="1.0" onclick="updateValue('rageMultiplier', 1.0)"> 通常 <br>
+    <input type="radio" name="rage" value="1.05" onclick="updateValue('rageMultiplier', 1.05)"> 小 <br>
+    <input type="radio" name="rage" value="1.1" onclick="updateValue('rageMultiplier', 1.1)"> 中 <br>
+    <input type="radio" name="rage" value="1.15" onclick="updateValue('rageMultiplier', 1.15)"> 大 <br>
+    <h2>計算結果: <span id="result">0</span></h2>
+    <script>
+        let multipliers = {
+            gaugeMultiplier: 1.2,
+            attributeMultiplier: 1.0,
+            rageMultiplier: 1.0
+        };
+
+        function updateValue(type, value) {
+            multipliers[type] = value;
+            calculateTotal();
+        }
+
+        function calculateTotal() {
+    let attackPower = parseFloat(document.getElementById("attackPower").value) || 0;
+    let extraPower = parseFloat(document.getElementById("extraPower").value) || 0;
+    let abilityMultiplier = parseFloat(document.getElementById("abilityMultiplier").value) || 1.0;
+    let killerMultiplier = parseFloat(document.getElementById("killerMultiplier").value) || 1.0;
+    let punchMultiplier = parseFloat(document.getElementById("punchMultiplier").value) || 1.0;
+    let WeakPoints = parseInt(document.getElementById("WeakPoints").value) || 0;
+    let BodyPoints = parseInt(document.getElementById("BodyPoints").value) || 0;
+    let questWeakPointsMultiplier = parseFloat(document.getElementById("WeakPointsMultiplier").value) || 1.0;
+    let playerWeakPointMultiplier = parseFloat(document.getElementById("playerUpedWeakPointMultiplier").value) || 1.0;
+    let effectiveWeakPointsMultiplier = Math.max(questWeakPointsMultiplier, playerWeakPointMultiplier);
+    let UpedWeakPointMultiplier = parseFloat(document.getElementById("UpedWeakPointMultiplier").value) || 1.0;
+    let BodyPointsMultiplier = parseFloat(document.getElementById("BodyPointsMultiplier").value) || 1.0;
+    let PunchDamage = parseInt(document.getElementById("PunchDamage").value) || 1.0;
+    let Defensivestrength = parseFloat(document.getElementById("Defensivestrength").value) || 1.0;
+    let playerDefenseDownMultiplier = parseFloat(document.getElementById("playerDefenseDownMultiplier").value) || 1.0;
+    let effectiveDefensivestrength = Math.max(Defensivestrength, playerDefenseDownMultiplier);
+    let MukiMukibuf = parseFloat(document.getElementById("MukiMukibuf").value) || 1.0;
+    let playerBuffMultiplier = parseFloat(document.getElementById("playerBuffMultiplier").value) || 1.0;
+    let effectiveBuffMultiplier = Math.max(MukiMukibuf, playerBuffMultiplier);
+    let emblemMultiplier = parseFloat(document.getElementById("emblemMultiplier").value) || 1.0;
+    let QuestMultiplier = parseFloat(document.getElementById("QuestMultiplier").value) || 1.0;
+
+
+            let total = PunchDamage /
+              
+                ((attackPower + extraPower) *
+                effectiveBuffMultiplier *
+                effectiveDefensivestrength *
+                (WeakPoints * effectiveWeakPointsMultiplier * UpedWeakPointMultiplier + BodyPoints * BodyPointsMultiplier) *
+                punchMultiplier *
+                abilityMultiplier *
+                killerMultiplier *
+                multipliers.gaugeMultiplier *
+                multipliers.attributeMultiplier *
+                emblemMultiplier *
+                QuestMultiplier *
+                multipliers.rageMultiplier);
+
+            document.getElementById("result").textContent = total.toFixed(2);}
+        
+    </script>
+</body>
+</html>

@@ -5,6 +5,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>モンストSS倍率計算ツール</title>
     <style>
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #ccc;
+        }
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+        }
         .hp-input {
             display: none;
         }
@@ -12,156 +38,306 @@
 </head>
 <body>
     <header>
-        <h1>モンストのSS倍率を計算できるサイトです</h1>
+        <h1>モンストのSS倍率とかダメージを計算できるサイトです</h1>
     </header>
     <main>
-        <section id="stage-selection">
-            <label for="stage">ステージを選択してください：</label>
-            <select id="stage">
-                <option value="" disabled selected>選択してください</option>
-                <optgroup label="轟絶">
-                    <option value="轟絶1">更新中…</option>
-                </optgroup>
-                <optgroup label="試練">
-                    <option value="試練1-boss1,3">試練1-boss1,3</option>
-                    <option value="試練1-boss2">試練1-boss2</option>
-                    <option value="試練2-boss1">試練2-boss1</option>
-                    <option value="試練2-boss2,3">試練2-boss2,3</option>
-                    <option value="試練3">試練3</option>
-                    <option value="試練4-boss1,2">試練4-boss1,2</option>
-                    <option value="試練4-boss3">試練4-boss3</option>
-                    <option value="試練5">試練5</option>
-                    <option value="試練6">試練6</option>
-                    <option value="試練7">試練7</option>
-                    <option value="試練8-中央弱点">試練8-中央弱点</option>
-                    <option value="試練8-中央弱点以外">試練8-中央弱点以外</option>
-                    <option value="試練9-boss1,2">試練9-boss1,2</option>
-                    <option value="試練9-boss3">試練9-boss3</option>
-                    <option value="試練10">試練10</option>
-                </optgroup>
-                <optgroup label="庭園">
-                    <option value="庭園1-boss1,3">庭園1-boss1,3</option>
-                    <option value="庭園1-boss2">庭園1-boss2</option>
-                    <option value="庭園2">庭園2</option>
-                    <option value="庭園3">庭園3</option>
-                    <option value="庭園4-boss1,3">庭園4-boss1,3</option>
-                    <option value="庭園4-boss2">庭園4-boss2</option>
-                    <option value="庭園5">庭園5</option>
-                    <option value="庭園6">庭園6</option>
-                    <option value="庭園7">庭園7</option>
-                    <option value="庭園8">庭園8</option>
-                    <option value="庭園9-boss1,2,3ポーションなし">庭園9-boss1,2,3ポーションなし</option>
-                    <option value="庭園9-boss3">庭園9-boss3</option>
-                    <option value="庭園10-stage1-ガラハッド">庭園10-stage1-ガラハッド</option>
-                    <option value="庭園10-stage1-ヴィヴィアン">庭園10-stage1-ヴィヴィアン</option>
-                    <option value="庭園10-stage2">庭園10-stage2</option>
-                    <option value="庭園10-stage3">庭園10-stage3</option>
-                    <option value="庭園10-stage4-ベリアル持ち越し">庭園10-stage4-ベリアル持ち越し</option>
-                    <option value="庭園10-stage4">庭園10-stage4</option>
-                    <option value="庭園10-stage5-開幕">庭園10-stage5-開幕</option>
-                    <option value="庭園10-stage5-開幕以外">庭園10-stage5-開幕以外</option>
-                    <option value="庭園10-stage6">庭園10-stage6</option>
-                </optgroup>
-            </select>
-        </section>
-        <section id="quest-multipliers">
-            <h2>クエスト側の倍率</h2>
-            <table>
-                <caption>クエスト詳細</caption>
-                <tr>
-                    <th>項目</th>
-                    <th>値</th>
-                </tr>
-                <tr>
-                    <td><label for="bodyPointsMultiplier">本体倍率:</label></td>
-                    <td><input id="bodyPointsMultiplier" type="text" readonly></td>
-                </tr>
-                <tr>
-                    <td><label for="punchMultiplier">直殴り倍率:</label></td>
-                    <td><input id="punchMultiplier" type="text" readonly></td>
-                </tr>
-                <tr>
-                    <td><label for="weakPointsMultiplier">弱点倍率:</label></td>
-                    <td><input id="weakPointsMultiplier" type="text" readonly></td>
-                </tr>
-                <tr>
-                    <td><label for="defensiveStrength">防御ダウン:</label></td>
-                    <td><input id="defensiveStrength" type="text" readonly></td>
-                </tr>
-                <tr>
-                    <td><label for="upedWeakPointMultiplier">弱点倍率up:</label></td>
-                    <td><input id="upedWeakPointMultiplier" type="text" readonly></td>
-                </tr>
-                <tr>
-                    <td><label for="mukiMukibuf">バフ(キャラの右下にムキムキマークが表示されるもの):</label></td>
-                    <td><input id="mukiMukibuf" type="number" value="1.0" readonly></td>
-                </tr>
-                <tr>
-                    <td><label for="questMultiplier">特殊倍率(キャラの右下にムキムキマークが表示されないもの):</label></td>
-                    <td><input id="questMultiplier" type="text" readonly></td>
-                </tr>
-            </table>
-            <div class="hp-input">
-                <label for="hp">残存HP割合:</label>
-                <input type="number" id="hp" step="0.001" min="0" max="1" value="1"><br>
-            </div>
-        </section>
-        <section id="player-equipment">
-            <h2>プレイヤー側の接待</h2>
-            <label for="playerUpedWeakPointMultiplier">弱点倍率up:</label>
-            <input id="playerUpedWeakPointMultiplier" type="number" value="1.0" oninput="calculateTotal()"><br>
-            <label for="playerDefenseDownMultiplier">防御ダウン:</label>
-            <input id="playerDefenseDownMultiplier" type="number" value="1.0" oninput="calculateTotal()"><br>
-            <label for="playerBuffMultiplier">バフ（キャラの右下にムキムキマークが表示されるもの）:</label>
-            <input id="playerBuffMultiplier" type="number" value="1.0" oninput="calculateTotal()"><br>
-            <br>
-            <label for="weakPoints">拾った弱点の数:</label>
-            <input type="number" id="weakPoints" value="1.0" oninput="calculateTotal()"> <br>
-            <label for="bodyPoints">拾った本体の数:</label>
-            <input type="number" id="bodyPoints" value="1.0" oninput="calculateTotal()"> <br>
-            <label for="attackPower">ゲージ前攻撃力:</label>
-            <input type="number" id="attackPower" value="0" oninput="calculateTotal()"> <br>
-            <label for="extraPower">加撃量:</label>
-            <input type="number" id="extraPower" value="0" oninput="calculateTotal()"> <br>
-        </section>
-        <section id="character-performance">
-            <h2>キャラクター性能</h2>
-            <p>ゲージ:</p>
-            <input type="radio" name="gauge" value="1.2" onclick="updateValue('gaugeMultiplier', 1.2)" checked> あり <br>
-            <input type="radio" name="gauge" value="1.0" onclick="updateValue('gaugeMultiplier', 1.0)"> なし <br>
-            <label for="abilityMultiplier">アビリティ:</label>
-            <input type="number" id="abilityMultiplier" value="1.0" oninput="calculateTotal()"> <br>
-            <label for="killerMultiplier">キラー:</label>
-            <input type="number" id="killerMultiplier" value="1.0" oninput="calculateTotal()"> <br>
-            <label for="emblemMultiplier">紋章:</label>
-            <input type="number" id="emblemMultiplier" value="0" oninput="calculateTotal()"> <br>
-            <label for="punchDamage">直殴り部分のダメージ:</label>
-            <input type="number" id="punchDamage" value="1.0" oninput="calculateTotal()"> <br>
-            <p>属性倍率を選んでください:</p>
-            <input type="radio" name="attribute" value="1.3" onclick="updateValue('attributeMultiplier', 1.3)" checked> 通常/非超バラ <br>
-            <input type="radio" name="attribute" value="1.596" onclick="updateValue('attributeMultiplier', 1.596)"> 通常/超バラ <br>
-            <input type="radio" name="attribute" value="1.5016" onclick="updateValue('attributeMultiplier', 1.5016)"> up/非超バラ <br>
-            <input type="radio" name="attribute" value="1.90592" onclick="updateValue('attributeMultiplier', 1.90592)"> up/超バラ <br>
-            <input type="radio" name="attribute" value="1.99" onclick="updateValue('attributeMultiplier', 1.99)"> 超up/非超バラ <br>
-            <input type="radio" name="attribute" value="2.80588" onclick="updateValue('attributeMultiplier', 2.80588)"> 超up/超バラ <br>
-            <input type="radio" name="attribute" value="2.9998" onclick="updateValue('attributeMultiplier', 2.9998)"> 超絶up/非超バラ <br>
-            <input type="radio" name="attribute" value="4.61176" onclick="updateValue('attributeMultiplier', 4.61176)"> 超絶up/超バラ <br>
-            <p>怒り倍率を選んでください:</p>
-            <input type="radio" name="rage" value="1.0" onclick="updateValue('rageMultiplier', 1.0)" checked> 通常 <br>
-            <input type="radio" name="rage" value="1.05" onclick="updateValue('rageMultiplier', 1.05)"> 小 <br>
-            <input type="radio" name="rage" value="1.1" onclick="updateValue('rageMultiplier', 1.1)"> 中 <br>
-            <input type="radio" name="rage" value="1.15" onclick="updateValue('rageMultiplier', 1.15)"> 大 <br>
-        </section>
-        <section id="calculation-result">
-            <h2>計算結果:</h2>
-            <span id="result">0</span>
-        </section>
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'Tab1')">ダメージから倍率</button>
+            <button class="tablinks" onclick="openTab(event, 'Tab2')">倍率からダメージ</button>
+        </div>
+
+        <div id="Tab1" class="tabcontent" style="display: block;">
+            <section id="stage-selection-tab1">
+                <label for="stage-tab1">ステージを選択してください：</label>
+                <select id="stage-tab1">
+                    <option value="" disabled selected>選択してください</option>
+                    <optgroup label="轟絶">
+                        <option value="轟絶1">更新中…</option>
+                    </optgroup>
+                    <optgroup label="試練">
+                        <option value="試練1-boss1,3">試練1-boss1,3</option>
+                        <option value="試練1-boss2">試練1-boss2</option>
+                        <option value="試練2-boss1">試練2-boss1</option>
+                        <option value="試練2-boss2,3">試練2-boss2,3</option>
+                        <option value="試練3">試練3</option>
+                        <option value="試練4-boss1,2">試練4-boss1,2</option>
+                        <option value="試練4-boss3">試練4-boss3</option>
+                        <option value="試練5">試練5</option>
+                        <option value="試練6">試練6</option>
+                        <option value="試練7">試練7</option>
+                        <option value="試練8-中央弱点">試練8-中央弱点</option>
+                        <option value="試練8-中央弱点以外">試練8-中央弱点以外</option>
+                        <option value="試練9-boss1,2">試練9-boss1,2</option>
+                        <option value="試練9-boss3">試練9-boss3</option>
+                        <option value="試練10">試練10</option>
+                    </optgroup>
+                    <optgroup label="庭園">
+                        <option value="庭園1-boss1,3">庭園1-boss1,3</option>
+                        <option value="庭園1-boss2">庭園1-boss2</option>
+                        <option value="庭園2">庭園2</option>
+                        <option value="庭園3">庭園3</option>
+                        <option value="庭園4-boss1,3">庭園4-boss1,3</option>
+                        <option value="庭園4-boss2">庭園4-boss2</option>
+                        <option value="庭園5">庭園5</option>
+                        <option value="庭園6">庭園6</option>
+                        <option value="庭園7">庭園7</option>
+                        <option value="庭園8">庭園8</option>
+                        <option value="庭園9-boss1,2,3ポーションなし">庭園9-boss1,2,3ポーションなし</option>
+                        <option value="庭園9-boss3">庭園9-boss3</option>
+                        <option value="庭園10-stage1-ガラハッド">庭園10-stage1-ガラハッド</option>
+                        <option value="庭園10-stage1-ヴィヴィアン">庭園10-stage1-ヴィヴィアン</option>
+                        <option value="庭園10-stage2">庭園10-stage2</option>
+                        <option value="庭園10-stage3">庭園10-stage3</option>
+                        <option value="庭園10-stage4-ベリアル持ち越し">庭園10-stage4-ベリアル持ち越し</option>
+                        <option value="庭園10-stage4">庭園10-stage4</option>
+                        <option value="庭園10-stage5-開幕">庭園10-stage5-開幕</option>
+                        <option value="庭園10-stage5-開幕以外">庭園10-stage5-開幕以外</option>
+                        <option value="庭園10-stage6">庭園10-stage6</option>
+                    </optgroup>
+                </select>
+            </section>
+            <section id="quest-multipliers-tab1">
+                <h2>クエスト側の倍率</h2>
+                <table>
+                    <caption>クエスト詳細</caption>
+                    <tr>
+                        <th>項目</th>
+                        <th>値</th>
+                    </tr>
+                    <tr>
+                        <td><label for="bodyPointsMultiplier-tab1">本体倍率:</label></td>
+                        <td><input id="bodyPointsMultiplier-tab1" type="text" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><label for="punchMultiplier-tab1">直殴り倍率:</label></td>
+                        <td><input id="punchMultiplier-tab1" type="text" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><label for="weakPointsMultiplier-tab1">弱点倍率:</label></td>
+                        <td><input id="weakPointsMultiplier-tab1" type="text" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><label for="defensiveStrength-tab1">防御ダウン:</label></td>
+                        <td><input id="defensiveStrength-tab1" type="text" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><label for="upedWeakPointMultiplier-tab1">弱点倍率up:</label></td>
+                        <td><input id="upedWeakPointMultiplier-tab1" type="text" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><label for="mukiMukibuf-tab1">バフ(ムキムキマーク):</label></td>
+                        <td><input id="mukiMukibuf-tab1" type="number" value="1.0" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><label for="questMultiplier-tab1">特殊倍率:</label></td>
+                        <td><input id="questMultiplier-tab1" type="text" readonly></td>
+                    </tr>
+                </table>
+                <div class="hp-input">
+                    <label for="hp-tab1">残存HP割合:</label>
+                    <input type="number" id="hp-tab1" step="0.001" min="0" max="1" value="1"><br>
+                </div>
+            </section>
+            <section id="player-equipment-tab1">
+                <h2>プレイヤー側の接待</h2>
+                <label for="playerUpedWeakPointMultiplier-tab1">弱点倍率up:</label>
+                <input id="playerUpedWeakPointMultiplier-tab1" type="number" value="1.0" oninput="calculateMultiplier()"><br>
+                <label for="playerDefenseDownMultiplier-tab1">防御ダウン:</label>
+                <input id="playerDefenseDownMultiplier-tab1" type="number" value="1.0" oninput="calculateMultiplier()"><br>
+                <label for="playerBuffMultiplier-tab1">バフ（ムキムキマーク）:</label>
+                <input id="playerBuffMultiplier-tab1" type="number" value="1.0" oninput="calculateMultiplier()"><br>
+                <br>
+                <label for="weakPoints-tab1">拾った弱点の数:</label>
+                <input type="number" id="weakPoints-tab1" value="1.0" oninput="calculateMultiplier()"> <br>
+                <label for="bodyPoints-tab1">拾った本体の数:</label>
+                <input type="number" id="bodyPoints-tab1" value="1.0" oninput="calculateMultiplier()"> <br>
+                <label for="attackPower-tab1">ゲージ前攻撃力:</label>
+                <input type="number" id="attackPower-tab1" value="0" oninput="calculateMultiplier()"> <br>
+                <label for="extraPower-tab1">加撃量:</label>
+                <input type="number" id="extraPower-tab1" value="0" oninput="calculateMultiplier()"> <br>
+            </section>
+            <section id="character-performance-tab1">
+                <h2>キャラクター性能</h2>
+                <p>ゲージ:</p>
+                <input type="radio" name="gauge-tab1" value="1.2" onclick="updateValue('gaugeMultiplier', 1.2)" checked> あり <br>
+                <input type="radio" name="gauge-tab1" value="1.0" onclick="updateValue('gaugeMultiplier', 1.0)"> なし <br>
+                <label for="abilityMultiplier-tab1">アビリティ:</label>
+                <input type="number" id="abilityMultiplier-tab1" value="1.0" oninput="calculateMultiplier()"> <br>
+                <label for="killerMultiplier-tab1">キラー:</label>
+                <input type="number" id="killerMultiplier-tab1" value="1.0" oninput="calculateMultiplier()"> <br>
+                <label for="emblemMultiplier-tab1">紋章:</label>
+                <input type="number" id="emblemMultiplier-tab1" value="0" oninput="calculateMultiplier()"> <br>
+                <label for="punchDamage-tab1">直殴り部分のダメージ:</label>
+                <input type="number" id="punchDamage-tab1" value="1.0" oninput="calculateMultiplier()"> <br>
+                <p>属性倍率を選んでください:</p>
+                <input type="radio" name="attribute-tab1" value="1.3" onclick="updateValue('attributeMultiplier', 1.3)" checked> 通常/非超バラ <br>
+                <input type="radio" name="attribute-tab1" value="1.596" onclick="updateValue('attributeMultiplier', 1.596)"> 通常/超バラ <br>
+                <input type="radio" name="attribute-tab1" value="1.5016" onclick="updateValue('attributeMultiplier', 1.5016)"> up/非超バラ <br>
+                <input type="radio" name="attribute-tab1" value="1.90592" onclick="updateValue('attributeMultiplier', 1.90592)"> up/超バラ <br>
+                <input type="radio" name="attribute-tab1" value="1.99" onclick="updateValue('attributeMultiplier', 1.99)"> 超up/非超バラ <br>
+                <input type="radio" name="attribute-tab1" value="2.80588" onclick="updateValue('attributeMultiplier', 2.80588)"> 超up/超バラ <br>
+                <input type="radio" name="attribute-tab1" value="2.9998" onclick="updateValue('attributeMultiplier', 2.9998)"> 超絶up/非超バラ <br>
+                <input type="radio" name="attribute-tab1" value="4.61176" onclick="updateValue('attributeMultiplier', 4.61176)"> 超絶up/超バラ <br>
+                <p>怒り倍率を選んでください:</p>
+                <input type="radio" name="rage-tab1" value="1.0" onclick="updateValue('rageMultiplier', 1.0)" checked> 通常 <br>
+                <input type="radio" name="rage-tab1" value="1.05" onclick="updateValue('rageMultiplier', 1.05)"> 小 <br>
+                <input type="radio" name="rage-tab1" value="1.1" onclick="updateValue('rageMultiplier', 1.1)"> 中 <br>
+                <input type="radio" name="rage-tab1" value="1.15" onclick="updateValue('rageMultiplier', 1.15)"> 大 <br>
+            </section>
+            <section id="calculation-result-tab1">
+                <h2>計算結果:</h2>
+                <span id="result-tab1">0</span>
+            </section>
+        </div>
+
+        <div id="Tab2" class="tabcontent">
+            <section id="stage-selection-tab2">
+                <label for="stage-tab2">ステージを選択してください：</label>
+                <select id="stage-tab2">
+                    <option value="" disabled selected>選択してください</option>
+                    <optgroup label="轟絶">
+                        <option value="轟絶1">更新中…</option>
+                    </optgroup>
+                    <optgroup label="試練">
+                        <option value="試練1-boss1,3">試練1-boss1,3</option>
+                        <option value="試練1-boss2">試練1-boss2</option>
+                        <option value="試練2-boss1">試練2-boss1</option>
+                        <option value="試練2-boss2,3">試練2-boss2,3</option>
+                        <option value="試練3">試練3</option>
+                        <option value="試練4-boss1,2">試練4-boss1,2</option>
+                        <option value="試練4-boss3">試練4-boss3</option>
+                        <option value="試練5">試練5</option>
+                        <option value="試練6">試練6</option>
+                        <option value="試練7">試練7</option>
+                        <option value="試練8-中央弱点">試練8-中央弱点</option>
+                        <option value="試練8-中央弱点以外">試練8-中央弱点以外</option>
+                        <option value="試練9-boss1,2">試練9-boss1,2</option>
+                        <option value="試練9-boss3">試練9-boss3</option>
+                        <option value="試練10">試練10</option>
+                    </optgroup>
+                    <optgroup label="庭園">
+                        <option value="庭園1-boss1,3">庭園1-boss1,3</option>
+                        <option value="庭園1-boss2">庭園1-boss2</option>
+                        <option value="庭園2">庭園2</option>
+                        <option value="庭園3">庭園3</option>
+                        <option value="庭園4-boss1,3">庭園4-boss1,3</option>
+                        <option value="庭園4-boss2">庭園4-boss2</option>
+                        <option value="庭園5">庭園5</option>
+                        <option value="庭園6">庭園6</option>
+                        <option value="庭園7">庭園7</option>
+                        <option value="庭園8">庭園8</option>
+                        <option value="庭園9-boss1,2,3ポーションなし">庭園9-boss1,2,3ポーションなし</option>
+                        <option value="庭園9-boss3">庭園9-boss3</option>
+                        <option value="庭園10-stage1-ガラハッド">庭園10-stage1-ガラハッド</option>
+                        <option value="庭園10-stage1-ヴィヴィアン">庭園10-stage1-ヴィヴィアン</option>
+                        <option value="庭園10-stage2">庭園10-stage2</option>
+                        <option value="庭園10-stage3">庭園10-stage3</option>
+                        <option value="庭園10-stage4-ベリアル持ち越し">庭園10-stage4-ベリアル持ち越し</option>
+                        <option value="庭園10-stage4">庭園10-stage4</option>
+                        <option value="庭園10-stage5-開幕">庭園10-stage5-開幕</option>
+                        <option value="庭園10-stage5-開幕以外">庭園10-stage5-開幕以外</option>
+                        <option value="庭園10-stage6">庭園10-stage6</option>
+                    </optgroup>
+                </select>
+            </section>
+            <section id="quest-multipliers-tab2">
+                <h2>クエスト側の倍率</h2>
+                <table>
+                    <caption>クエスト詳細</caption>
+                    <tr>
+                        <th>項目</th>
+                        <th>値</th>
+                    </tr>
+                    <tr>
+                        <td><label for="bodyPointsMultiplier-tab2">本体倍率:</label></td>
+                        <td><input id="bodyPointsMultiplier-tab2" type="text" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><label for="punchMultiplier-tab2">直殴り倍率:</label></td>
+                        <td><input id="punchMultiplier-tab2" type="text" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><label for="weakPointsMultiplier-tab2">弱点倍率:</label></td>
+                        <td><input id="weakPointsMultiplier-tab2" type="text" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><label for="defensiveStrength-tab2">防御ダウン:</label></td>
+                        <td><input id="defensiveStrength-tab2" type="text" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><label for="upedWeakPointMultiplier-tab2">弱点倍率up:</label></td>
+                        <td><input id="upedWeakPointMultiplier-tab2" type="text" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><label for="mukiMukibuf-tab2">バフ(ムキムキマーク):</label></td>
+                        <td><input id="mukiMukibuf-tab2" type="number" value="1.0" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><label for="questMultiplier-tab2">特殊倍率:</label></td>
+                        <td><input id="questMultiplier-tab2" type="text" readonly></td>
+                    </tr>
+                </table>
+                <div class="hp-input">
+                    <label for="hp-tab2">残存HP割合:</label>
+                    <input type="number" id="hp-tab2" step="0.001" min="0" max="1" value="1"><br>
+                </div>
+            </section>
+            <section id="player-equipment-tab2">
+                <h2>プレイヤー側の接待</h2>
+                <label for="playerUpedWeakPointMultiplier-tab2">弱点倍率up:</label>
+                <input id="playerUpedWeakPointMultiplier-tab2" type="number" value="1.0" oninput="calculateDamage()"><br>
+                <label for="playerDefenseDownMultiplier-tab2">防御ダウン:</label>
+                <input id="playerDefenseDownMultiplier-tab2" type="number" value="1.0" oninput="calculateDamage()"><br>
+                <label for="playerBuffMultiplier-tab2">バフ（ムキムキマーク）:</label>
+                <input id="playerBuffMultiplier-tab2" type="number" value="1.0" oninput="calculateDamage()"><br>
+                <br>
+                <label for="weakPoints-tab2">拾った弱点の数:</label>
+                <input type="number" id="weakPoints-tab2" value="1.0" oninput="calculateDamage()"> <br>
+                <label for="bodyPoints-tab2">拾った本体の数:</label>
+                <input type="number" id="bodyPoints-tab2" value="1.0" oninput="calculateDamage()"> <br>
+                <label for="attackPower-tab2">ゲージ前攻撃力:</label>
+                <input type="number" id="attackPower-tab2" value="0" oninput="calculateDamage()"> <br>
+                <label for="extraPower-tab2">加撃量:</label>
+                <input type="number" id="extraPower-tab2" value="0" oninput="calculateDamage()"> <br>
+            </section>
+            <section id="character-performance-tab2">
+                <h2>キャラクター性能</h2>
+                <p>ゲージ:</p>
+                <input type="radio" name="gauge-tab2" value="1.2" onclick="updateValue('gaugeMultiplier', 1.2)" checked> あり <br>
+                <input type="radio" name="gauge-tab2" value="1.0" onclick="updateValue('gaugeMultiplier', 1.0)"> なし <br>
+                <label for="abilityMultiplier-tab2">アビリティ:</label>
+                <input type="number" id="abilityMultiplier-tab2" value="1.0" oninput="calculateDamage()"> <br>
+                <label for="killerMultiplier-tab2">キラー:</label>
+                <input type="number" id="killerMultiplier-tab2" value="1.0" oninput="calculateDamage()"> <br>
+                <label for="emblemMultiplier-tab2">紋章:</label>
+                <input type="number" id="emblemMultiplier-tab2" value="0" oninput="calculateDamage()"> <br>
+                <label for="characterMultiplier-tab2">ss倍率:</label>
+                <input type="number" id="characterMultiplier-tab2" value="1.0" step="0.1" oninput="calculateDamage()"> <br>
+                <p>属性倍率を選んでください:</p>
+                <input type="radio" name="attribute-tab2" value="1.3" onclick="updateValue('attributeMultiplier', 1.3)" checked> 通常/非超バラ <br>
+                <input type="radio" name="attribute-tab2" value="1.596" onclick="updateValue('attributeMultiplier', 1.596)"> 通常/超バラ <br>
+                <input type="radio" name="attribute-tab2" value="1.5016" onclick="updateValue('attributeMultiplier', 1.5016)"> up/非超バラ <br>
+                <input type="radio" name="attribute-tab2" value="1.90592" onclick="updateValue('attributeMultiplier', 1.90592)"> up/超バラ <br>
+                <input type="radio" name="attribute-tab2" value="1.99" onclick="updateValue('attributeMultiplier', 1.99)"> 超up/非超バラ <br>
+                <input type="radio" name="attribute-tab2" value="2.80588" onclick="updateValue('attributeMultiplier', 2.80588)"> 超up/超バラ <br>
+                <input type="radio" name="attribute-tab2" value="2.9998" onclick="updateValue('attributeMultiplier', 2.9998)"> 超絶up/非超バラ <br>
+                <input type="radio" name="attribute-tab2" value="4.61176" onclick="updateValue('attributeMultiplier', 4.61176)"> 超絶up/超バラ <br>
+                <p>怒り倍率を選んでください:</p>
+                <input type="radio" name="rage-tab2" value="1.0" onclick="updateValue('rageMultiplier', 1.0)" checked> 通常 <br>
+                <input type="radio" name="rage-tab2" value="1.05" onclick="updateValue('rageMultiplier', 1.05)"> 小 <br>
+                <input type="radio" name="rage-tab2" value="1.1" onclick="updateValue('rageMultiplier', 1.1)"> 中 <br>
+                <input type="radio" name="rage-tab2" value="1.15" onclick="updateValue('rageMultiplier', 1.15)"> 大 <br>
+            </section>
+            <section id="calculation-result-tab2">
+                <h2>計算結果:</h2>
+                <label>直殴りダメージ:</label>
+                <span id="result-tab2">0</span>
+            </section>
+        </div>
     </main>
     <script>
         const stageMultipliers = {
             "轟絶1": { punchMultiplier: 2.1, weakPointsMultiplier: 2.6, bodyPointsMultiplier: 1.5, defensiveStrength: 1.0, mukiMukibuf: 1.0, questMultiplier: 1.0 },
-            "轟絶2": { punchMultiplier: 2.2, weakPointsMultiplier: 2.8, bodyPointsMultiplier: 1.6, defensiveStrength: 1.0, mukiMukibuf: 1.0, questMultiplier: 1.0 },
-            "轟絶3": { punchMultiplier: 2.5, weakPointsMultiplier: 3.0, bodyPointsMultiplier: 1.7, defensiveStrength: 1.0, mukiMukibuf: 1.0, questMultiplier: 1.0 },
             "試練1-boss1,3": { punchMultiplier: 1, weakPointsMultiplier: 2.5, bodyPointsMultiplier: 0.5, defensiveStrength: 1.0, mukiMukibuf: 1.0, questMultiplier: 1.0 },
             "試練1-boss2": { punchMultiplier: 1, weakPointsMultiplier: 1, bodyPointsMultiplier: 0.5, defensiveStrength: 1.0, mukiMukibuf: 1.0, questMultiplier: 1.0 },
             "試練2-boss1": { punchMultiplier: 10, weakPointsMultiplier: 1, bodyPointsMultiplier: 0.01, defensiveStrength: 6, mukiMukibuf: 30, questMultiplier: 1.0 },
@@ -202,91 +378,178 @@
 
         let dynamicStages = ["試練1-boss1,3", "試練1-boss2", "庭園5"];
         let currentStage = "";
+        let currentHp = 1; // 0～1の範囲で統一
         let multipliers = {
             gaugeMultiplier: 1.2,
-            attributeMultiplier: 1.0,
+            attributeMultiplier: 1.3,
             rageMultiplier: 1.0
         };
 
-        document.getElementById("stage").addEventListener("change", function() {
-            let selectedStage = this.value;
-            currentStage = selectedStage; // currentStageを必ず更新
-            let multipliersData = stageMultipliers[selectedStage];
-            let hpInput = document.querySelector(".hp-input");
+        function openTab(evt, tabName) {
+            let i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
 
-            // HP入力欄の表示/非表示を制御
+            // タブ切り替え時にステージとHPを同期
+            if (tabName === "Tab1") {
+                document.getElementById("stage-tab1").value = currentStage;
+                document.getElementById("hp-tab1").value = currentHp;
+                updateStage("Tab1");
+                calculateMultiplier();
+            } else if (tabName === "Tab2") {
+                document.getElementById("stage-tab2").value = currentStage;
+                document.getElementById("hp-tab2").value = currentHp;
+                updateStage("Tab2");
+                calculateDamage();
+            }
+        }
+
+        function updateStage(tab) {
+            let stageId = tab === "Tab1" ? "stage-tab1" : "stage-tab2";
+            let hpId = tab === "Tab1" ? "hp-tab1" : "hp-tab2";
+            let questMultiplierId = tab === "Tab1" ? "questMultiplier-tab1" : "questMultiplier-tab2";
+            let punchMultiplierId = tab === "Tab1" ? "punchMultiplier-tab1" : "punchMultiplier-tab2";
+            let weakPointsMultiplierId = tab === "Tab1" ? "weakPointsMultiplier-tab1" : "weakPointsMultiplier-tab2";
+            let bodyPointsMultiplierId = tab === "Tab1" ? "bodyPointsMultiplier-tab1" : "bodyPointsMultiplier-tab2";
+            let defensiveStrengthId = tab === "Tab1" ? "defensiveStrength-tab1" : "defensiveStrength-tab2";
+            let mukiMukibufId = tab === "Tab1" ? "mukiMukibuf-tab1" : "mukiMukibuf-tab2";
+            let upedWeakPointMultiplierId = tab === "Tab1" ? "upedWeakPointMultiplier-tab1" : "upedWeakPointMultiplier-tab2";
+            let playerUpedWeakPointMultiplierId = tab === "Tab1" ? "playerUpedWeakPointMultiplier-tab1" : "playerUpedWeakPointMultiplier-tab2";
+
+            let selectedStage = document.getElementById(stageId).value;
+            currentStage = selectedStage;
+            let multipliersData = stageMultipliers[selectedStage];
+            let hpInput = document.querySelector(`#${tab} .hp-input`);
+
             if (dynamicStages.includes(selectedStage)) {
                 hpInput.style.display = "block";
-                // 初回表示時にHPに基づく計算を実行
-                let hp = parseInt(document.getElementById("hp").value) || 1;
+                let hp = parseFloat(document.getElementById(hpId).value) || 1;
+                currentHp = hp;
                 let questMultiplier;
                 if (selectedStage === "試練1-boss1,3" || selectedStage === "試練1-boss2") {
-                    questMultiplier = hp*10+1;
+                    questMultiplier = hp * 10 + 1;
                 } else if (selectedStage === "庭園5") {
-                    questMultiplier = hp*20+1; // HP 100% → 1.0, HP 0% → 3.0
+                    questMultiplier = hp * 20 + 1;
                 }
-                document.getElementById("questMultiplier").value = questMultiplier ? questMultiplier.toFixed(2) : 1.0;
+                document.getElementById(questMultiplierId).value = questMultiplier ? questMultiplier.toFixed(2) : 1.0;
             } else {
                 hpInput.style.display = "none";
-                document.getElementById("questMultiplier").value = multipliersData.questMultiplier ? multipliersData.questMultiplier.toFixed(2) : 1.0;
+                document.getElementById(questMultiplierId).value = multipliersData.questMultiplier ? multipliersData.questMultiplier.toFixed(2) : 1.0;
             }
 
             if (multipliersData) {
-                document.getElementById("punchMultiplier").value = multipliersData.punchMultiplier ? multipliersData.punchMultiplier.toFixed(2) : 1.0;
-                document.getElementById("weakPointsMultiplier").value = multipliersData.weakPointsMultiplier ? multipliersData.weakPointsMultiplier.toFixed(2) : 1.0;
-                document.getElementById("bodyPointsMultiplier").value = multipliersData.bodyPointsMultiplier ? multipliersData.bodyPointsMultiplier.toFixed(2) : 1.0;
-                document.getElementById("defensiveStrength").value = (multipliersData.defensiveStrength || 1.0).toFixed(2);
-                document.getElementById("mukiMukibuf").value = (multipliersData.mukiMukibuf || 1.0).toFixed(2);
-                document.getElementById("upedWeakPointMultiplier").value = (multipliersData.upedWeakPointMultiplier || 1.0).toFixed(2);
-                document.getElementById("playerUpedWeakPointMultiplier").value = (multipliersData.playerUpedWeakPointMultiplier || 1.0).toFixed(2);
+                document.getElementById(punchMultiplierId).value = multipliersData.punchMultiplier ? multipliersData.punchMultiplier.toFixed(2) : 1.0;
+                document.getElementById(weakPointsMultiplierId).value = multipliersData.weakPointsMultiplier ? multipliersData.weakPointsMultiplier.toFixed(2) : 1.0;
+                document.getElementById(bodyPointsMultiplierId).value = multipliersData.bodyPointsMultiplier ? multipliersData.bodyPointsMultiplier.toFixed(2) : 1.0;
+                document.getElementById(defensiveStrengthId).value = (multipliersData.defensiveStrength || 1.0).toFixed(2);
+                document.getElementById(mukiMukibufId).value = (multipliersData.mukiMukibuf || 1.0).toFixed(2);
+                document.getElementById(upedWeakPointMultiplierId).value = (multipliersData.upedWeakPointMultiplier || 1.0).toFixed(2);
+                document.getElementById(playerUpedWeakPointMultiplierId).value = (multipliersData.playerUpedWeakPointMultiplier || 1.0).toFixed(2);
             }
-            calculateTotal();
+
+            // 他のタブにもステージ選択とHPを反映
+            if (tab === "Tab1") {
+                document.getElementById("stage-tab2").value = currentStage;
+                document.getElementById("hp-tab2").value = currentHp;
+                updateStage("Tab2");
+            } else if (tab === "Tab2") {
+                document.getElementById("stage-tab1").value = currentStage;
+                document.getElementById("hp-tab1").value = currentHp;
+                updateStage("Tab1");
+            }
+        }
+
+        // Tab1のイベントリスナー
+        document.getElementById("stage-tab1").addEventListener("change", function() {
+            updateStage("Tab1");
+            calculateMultiplier();
         });
 
-        document.getElementById("hp").addEventListener("input", function() {
+        document.getElementById("hp-tab1").addEventListener("input", function() {
             if (dynamicStages.includes(currentStage)) {
                 let hp = parseFloat(this.value) || 1;
+                currentHp = hp;
                 let questMultiplier;
                 if (currentStage === "試練1-boss1,3" || currentStage === "試練1-boss2") {
-                    questMultiplier = hp*10+1;
+                    questMultiplier = hp * 10 + 1;
                 } else if (currentStage === "庭園5") {
-                    questMultiplier =hp*20+1; // HP 100% → 1.0, HP 0% → 3.0
+                    questMultiplier = hp * 20 + 1;
                 }
-                document.getElementById("questMultiplier").value = questMultiplier ? questMultiplier.toFixed(2) : 1.0;
-                calculateTotal();
+                document.getElementById("questMultiplier-tab1").value = questMultiplier ? questMultiplier.toFixed(2) : 1.0;
+                document.getElementById("hp-tab2").value = hp;
+                document.getElementById("questMultiplier-tab2").value = questMultiplier ? questMultiplier.toFixed(2) : 1.0;
+                calculateMultiplier();
+                if (document.getElementById("Tab2").style.display === "block") {
+                    calculateDamage();
+                }
+            }
+        });
+
+        // Tab2のイベントリスナー
+        document.getElementById("stage-tab2").addEventListener("change", function() {
+            updateStage("Tab2");
+            calculateDamage();
+        });
+
+        document.getElementById("hp-tab2").addEventListener("input", function() {
+            if (dynamicStages.includes(currentStage)) {
+                let hp = parseFloat(this.value) || 1;
+                currentHp = hp;
+                let questMultiplier;
+                if (currentStage === "試練1-boss1,3" || currentStage === "試練1-boss2") {
+                    questMultiplier = hp * 10 + 1;
+                } else if (currentStage === "庭園5") {
+                    questMultiplier = hp * 20 + 1;
+                }
+                document.getElementById("questMultiplier-tab2").value = questMultiplier ? questMultiplier.toFixed(2) : 1.0;
+                document.getElementById("hp-tab1").value = hp;
+                document.getElementById("questMultiplier-tab1").value = questMultiplier ? questMultiplier.toFixed(2) : 1.0;
+                calculateDamage();
+                if (document.getElementById("Tab1").style.display === "block") {
+                    calculateMultiplier();
+                }
             }
         });
 
         function updateValue(type, value) {
             multipliers[type] = value;
-            calculateTotal();
+            if (document.getElementById("Tab1").style.display === "block") calculateMultiplier();
+            else if (document.getElementById("Tab2").style.display === "block") calculateDamage();
         }
 
-        function calculateTotal() {
-            let attackPower = parseFloat(document.getElementById("attackPower").value) || 0;
-            let extraPower = parseFloat(document.getElementById("extraPower").value) || 0;
-            let abilityMultiplier = parseFloat(document.getElementById("abilityMultiplier").value) || 1.0;
-            let killerMultiplier = parseFloat(document.getElementById("killerMultiplier").value) || 1.0;
-            let punchMultiplier = parseFloat(document.getElementById("punchMultiplier").value) || 1.0;
-            let weakPoints = parseInt(document.getElementById("weakPoints").value) || 0;
-            let bodyPoints = parseInt(document.getElementById("bodyPoints").value) || 0;
-            let questWeakPointsMultiplier = parseFloat(document.getElementById("weakPointsMultiplier").value) || 1.0;
-            let playerWeakPointMultiplier = parseFloat(document.getElementById("playerUpedWeakPointMultiplier").value) || 1.0;
+        function calculateMultiplier() {
+            let attackPower = parseFloat(document.getElementById("attackPower-tab1").value) || 0;
+            let extraPower = parseFloat(document.getElementById("extraPower-tab1").value) || 0;
+            let abilityMultiplier = parseFloat(document.getElementById("abilityMultiplier-tab1").value) || 1.0;
+            let killerMultiplier = parseFloat(document.getElementById("killerMultiplier-tab1").value) || 1.0;
+            let punchMultiplier = parseFloat(document.getElementById("punchMultiplier-tab1").value) || 1.0;
+            let weakPoints = parseInt(document.getElementById("weakPoints-tab1").value) || 0;
+            let bodyPoints = parseInt(document.getElementById("bodyPoints-tab1").value) || 0;
+            let questWeakPointsMultiplier = parseFloat(document.getElementById("weakPointsMultiplier-tab1").value) || 1.0;
+            let playerWeakPointMultiplier = parseFloat(document.getElementById("playerUpedWeakPointMultiplier-tab1").value) || 1.0;
             let effectiveWeakPointsMultiplier = Math.max(questWeakPointsMultiplier, playerWeakPointMultiplier);
-            let upedWeakPointMultiplier = parseFloat(document.getElementById("upedWeakPointMultiplier").value) || 1.0;
-            let bodyPointsMultiplier = parseFloat(document.getElementById("bodyPointsMultiplier").value) || 1.0;
-            let punchDamage = parseFloat(document.getElementById("punchDamage").value) || 1.0;
-            let defensiveStrength = parseFloat(document.getElementById("defensiveStrength").value) || 1.0;
-            let playerDefenseDownMultiplier = parseFloat(document.getElementById("playerDefenseDownMultiplier").value) || 1.0;
+            let upedWeakPointMultiplier = parseFloat(document.getElementById("upedWeakPointMultiplier-tab1").value) || 1.0;
+            let bodyPointsMultiplier = parseFloat(document.getElementById("bodyPointsMultiplier-tab1").value) || 1.0;
+            let punchDamage = parseFloat(document.getElementById("punchDamage-tab1").value) || 1.0;
+            let defensiveStrength = parseFloat(document.getElementById("defensiveStrength-tab1").value) || 1.0;
+            let playerDefenseDownMultiplier = parseFloat(document.getElementById("playerDefenseDownMultiplier-tab1").value) || 1.0;
             let effectiveDefensiveStrength = Math.max(defensiveStrength, playerDefenseDownMultiplier);
-            let mukiMukibuf = parseFloat(document.getElementById("mukiMukibuf").value) || 1.0;
-            let playerBuffMultiplier = parseFloat(document.getElementById("playerBuffMultiplier").value) || 1.0;
+            let mukiMukibuf = parseFloat(document.getElementById("mukiMukibuf-tab1").value) || 1.0;
+            let playerBuffMultiplier = parseFloat(document.getElementById("playerBuffMultiplier-tab1").value) || 1.0;
             let effectiveBuffMultiplier = Math.max(mukiMukibuf, playerBuffMultiplier);
-            let emblemMultiplier = parseFloat(document.getElementById("emblemMultiplier").value) || 1.0;
-            let questMultiplier = parseFloat(document.getElementById("questMultiplier").value) || 1.0;
+            let emblemMultiplier = parseFloat(document.getElementById("emblemMultiplier-tab1").value) || 1.0;
+            let questMultiplier = parseFloat(document.getElementById("questMultiplier-tab1").value) || 1.0;
 
-            let total = punchDamage /
-                ((attackPower + extraPower) *
+            let multiplierProduct = 
+            (attackPower + extraPower) *
                 effectiveBuffMultiplier *
                 effectiveDefensiveStrength *
                 (weakPoints * effectiveWeakPointsMultiplier * upedWeakPointMultiplier + bodyPoints * bodyPointsMultiplier) *
@@ -297,14 +560,55 @@
                 multipliers.attributeMultiplier *
                 emblemMultiplier *
                 questMultiplier *
-                multipliers.rageMultiplier);
+                multipliers.rageMultiplier;
 
-            document.getElementById("result").textContent = total.toFixed(2);
+           
+
+            
+            document.getElementById("result-tab1").textContent = total.toFixed(2);
         }
-    </script>
-</body>
-</html>
-        
+
+        function calculateDamage() {
+            let attackPower = parseFloat(document.getElementById("attackPower-tab2").value) || 0;
+            let extraPower = parseFloat(document.getElementById("extraPower-tab2").value) || 0;
+            let abilityMultiplier = parseFloat(document.getElementById("abilityMultiplier-tab2").value) || 1.0;
+            let killerMultiplier = parseFloat(document.getElementById("killerMultiplier-tab2").value) || 1.0;
+            let punchMultiplier = parseFloat(document.getElementById("punchMultiplier-tab2").value) || 1.0;
+            let weakPoints = parseInt(document.getElementById("weakPoints-tab2").value) || 0;
+            let bodyPoints = parseInt(document.getElementById("bodyPoints-tab2").value) || 0;
+            let questWeakPointsMultiplier = parseFloat(document.getElementById("weakPointsMultiplier-tab2").value) || 1.0;
+            let playerWeakPointMultiplier = parseFloat(document.getElementById("playerUpedWeakPointMultiplier-tab2").value) || 1.0;
+            let effectiveWeakPointsMultiplier = Math.max(questWeakPointsMultiplier, playerWeakPointMultiplier);
+            let upedWeakPointMultiplier = parseFloat(document.getElementById("upedWeakPointMultiplier-tab2").value) || 1.0;
+            let bodyPointsMultiplier = parseFloat(document.getElementById("bodyPointsMultiplier-tab2").value) || 1.0;
+            let defensiveStrength = parseFloat(document.getElementById("defensiveStrength-tab2").value) || 1.0;
+            let playerDefenseDownMultiplier = parseFloat(document.getElementById("playerDefenseDownMultiplier-tab2").value) || 1.0;
+            let effectiveDefensiveStrength = Math.max(defensiveStrength, playerDefenseDownMultiplier);
+            let mukiMukibuf = parseFloat(document.getElementById("mukiMukibuf-tab2").value) || 1.0;
+            let playerBuffMultiplier = parseFloat(document.getElementById("playerBuffMultiplier-tab2").value) || 1.0;
+            let effectiveBuffMultiplier = Math.max(mukiMukibuf, playerBuffMultiplier);
+            let emblemMultiplier = parseFloat(document.getElementById("emblemMultiplier-tab2").value) || 1.0;
+            let questMultiplier = parseFloat(document.getElementById("questMultiplier-tab2").value) || 1.0;
+            let characterMultiplier = parseFloat(document.getElementById("characterMultiplier-tab2").value) || 1.0;
+
+            let multiplierProduct = (attackPower + extraPower) *
+                effectiveBuffMultiplier *
+                effectiveDefensiveStrength *
+                (weakPoints * effectiveWeakPointsMultiplier * upedWeakPointMultiplier + bodyPoints * bodyPointsMultiplier) *
+                punchMultiplier *
+                abilityMultiplier *
+                killerMultiplier *
+                multipliers.gaugeMultiplier *
+                multipliers.attributeMultiplier *
+                emblemMultiplier *
+                questMultiplier *
+                multipliers.rageMultiplier;
+
+            
+
+            let punchDamage = characterMultiplier * multiplierProduct;
+            document.getElementById("result-tab2").textContent = punchDamage.toFixed(2);
+        }
     </script>
 </body>
 </html>
